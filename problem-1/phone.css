@@ -1,0 +1,45 @@
+#main {
+    width: 60%;
+    margin: auto;
+    text-align: center;
+}
+
+#inputBox {
+    border: cornflowerblue 3px solid;
+    background-color: lightskyblue;
+    border-radius: 1rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+#error {
+    display: none;
+}
+
+#inputBox input{
+    margin-top: 0;
+    padding: 0;
+}
+
+#searchBox {
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
+
+table, th, td {
+    border: 0.1px solid;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+
+}
+
+tbody {
+    font-size: 1.5em;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #f2f2f2;
+}
