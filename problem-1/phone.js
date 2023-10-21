@@ -8,6 +8,9 @@ window.onload = () => {
     let contacts = sessionStorage.getItem("contacts");
     contacts = JSON.parse(contacts);
     loadTable(contacts);
+
+    let searchBox = document.getElementById("searchBox");
+    searchBox.addEventListener("keyup", filterTableByPhoneNo);
 }
 
 const addContact = (event) => {
@@ -104,10 +107,40 @@ const showInputError = (text) => {
 
 let sorted = false;
 const sortTableByName = (event) => {
-    let header = event.target;
-    console.log(event.target);
-    let contacts = [];
+    let contacts = tableToArray();
+    const compareByName = (a, b) => {
+        return a.nameInput.localeCompare(b.nameInput)
+    }
 
+    sorted ? contacts.reverse() : contacts.sort(compareByName);
+    sorted = !sorted;
+    loadTable(contacts);
+}
+
+const filterTableByPhoneNo = (event) => {
+    let searchInput = event.target.value;
+    let contacts = sessionStorage.getItem("contacts");
+    contacts = JSON.parse(contacts);
+    console.log(searchInput);
+    console.log(contacts)
+    let filtered = contacts.filter(contact => {
+        return contact.phoneNoInput.includes(searchInput);
+    })
+    filtered.length === 0 ? showNoResult() : hideNoResult();
+    loadTable(filtered);
+}
+
+const showNoResult = () => {
+    let noResult = document.getElementById("noResult").firstElementChild;
+    noResult.innerHTML = "No result";
+}
+
+const hideNoResult = () => {
+    let noResult = document.getElementById("noResult").firstElementChild;
+    noResult.innerHTML = "";
+}
+const tableToArray = () => {
+    let contacts = [];
     document
         .querySelectorAll("tbody tr")
         .forEach(tr => {
@@ -130,11 +163,5 @@ const sortTableByName = (event) => {
                 }
             })
         });
-    const compareByName = (a, b) => {
-        return a.nameInput.localeCompare(b.nameInput)
-    }
-
-    sorted ? contacts.reverse() : contacts.sort(compareByName);
-    sorted = !sorted;
-    loadTable(contacts);
+    return contacts;
 }
