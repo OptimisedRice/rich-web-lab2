@@ -1,7 +1,13 @@
 window.onload = () => {
     let form = document.getElementById("contactForm");
     form.addEventListener("submit", addContact);
-    loadTable();
+
+    let nameHeader = document.getElementById("nameHeader");
+    nameHeader.addEventListener("click", sortTableByName);
+
+    let contacts = sessionStorage.getItem("contacts");
+    contacts = JSON.parse(contacts);
+    loadTable(contacts);
 }
 
 const addContact = (event) => {
@@ -26,10 +32,10 @@ const addContact = (event) => {
     }
 }
 
-const loadTable = () => {
+const loadTable = (contacts) => {
     let table = document.querySelector("table");
-    let contacts = sessionStorage.getItem("contacts");
-    contacts = JSON.parse(contacts);
+    //clear table
+    table.lastElementChild.textContent='';
 
     contacts.map(contact => {
         let tableRow = document.createElement("tr");
@@ -46,11 +52,15 @@ const loadTable = () => {
         tableRow.appendChild(tableCellPhone);
         tableRow.appendChild(tableCellEmail);
 
-        table.appendChild(tableRow);
+        table.lastElementChild.appendChild(tableRow);
     })
 }
 
 const validateInputs = (inputs) => {
+    if(inputs.nameInput === '' || inputs.phoneNoInput === '' || inputs.emailInput === '') {
+        showInputError("fields should not be empty");
+        return false;
+    }
     //validate name
     let onlyLettersAndWhitespace = /[^A-Z ]/gi;
     if(onlyLettersAndWhitespace.test(inputs.nameInput)) {
@@ -90,4 +100,41 @@ const validateInputs = (inputs) => {
 const showInputError = (text) => {
     let error = document.getElementById("error").firstElementChild;
     error.innerHTML = "Error: " + text;
+}
+
+let sorted = false;
+const sortTableByName = (event) => {
+    let header = event.target;
+    console.log(event.target);
+    let contacts = [];
+
+    document
+        .querySelectorAll("tbody tr")
+        .forEach(tr => {
+            let contact = {nameInput: '', phoneNoInput: '', emailInput: ''};
+            tr.childNodes.forEach( td => {
+                switch (td.cellIndex) {
+                    case 0: {
+                        contact.nameInput = td.innerText;
+                        return;
+                    }
+                    case 1: {
+                        contact.phoneNoInput = td.innerText;
+                        return;
+                    }
+                    case 2: {
+                        contact.emailInput = td.innerText;
+                        contacts.push(contact);
+                        return;
+                    }
+                }
+            })
+        });
+    const compareByName = (a, b) => {
+        return a.nameInput.localeCompare(b.nameInput)
+    }
+
+    sorted ? contacts.reverse() : contacts.sort(compareByName);
+    sorted = !sorted;
+    loadTable(contacts);
 }
