@@ -1,0 +1,76 @@
+#main {
+    width: 60%;
+    margin: auto;
+}
+
+#searchBox {
+    border: cornflowerblue 3px solid;
+    background-color: lightskyblue;
+    border-radius: 1rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+#usernameForm {
+    display: flex;
+    justify-content: space-between;
+}
+
+#usernameInput {
+    width: 80%;
+    font-size: 2vw;
+}
+
+#search {
+    width: 100%;
+    height: 100%;
+    font-size: large;
+}
+
+#userInfo {
+    display: flex;
+}
+
+#userInfo div{
+    flex: 50%;
+
+}
+
+#userProfile {
+    flex: 50%;
+    margin: 1vw;
+    background-color: lightskyblue;
+    max-width: 50%;
+}
+
+#userProfile img{
+    width: 100%;
+}
+
+#userRepos {
+    flex: 50%;
+    margin: 1vw;
+    background-color: lightskyblue;
+}
+
+#userTitles {
+    display: flex;
+}
+
+#userTitles h2 {
+    flex: 50%;
+}
+
+table {
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
+}
+
+td {
+    border-collapse: collapse;
+    border: black 1px solid;
+    margin: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+}

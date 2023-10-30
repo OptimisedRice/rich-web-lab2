@@ -1,63 +1,69 @@
 window.onload = () => {
-    let form = document.getElementById("contactForm");
-    form.addEventListener("submit", addContact);
-
-    let nameHeader = document.getElementById("nameHeader");
-    nameHeader.addEventListener("click", sortTableByName);
-
-    let contacts = sessionStorage.getItem("contacts");
-    contacts = JSON.parse(contacts);
-    loadTable(contacts);
-
-    let searchBox = document.getElementById("searchBox");
-    searchBox.addEventListener("keyup", filterTableByPhoneNo);
+    let search = document.getElementById("usernameForm");
+    search.addEventListener("submit", searchUser);
 }
 
-const addContact = (event) => {
+const searchUser = (event) => {
     event.preventDefault();
 
-    let nameInput = event.target.querySelector("#name").value;
-    let phoneNoInput = event.target.querySelector("#phoneNo").value;
-    let emailInput = event.target.querySelector("#email").value;
-    let contact = {nameInput, phoneNoInput, emailInput};
-    if (validateInputs(contact)) {
-        let contacts = [];
-        if(sessionStorage.getItem("contacts") === null) {
-            contacts.push(contact);
-        } else {
-            contacts = sessionStorage.getItem("contacts");
-            contacts = JSON.parse(contacts);
-            contacts.push(contact);
-        }
-        sessionStorage.setItem("contacts", JSON.stringify(contacts));
-        console.log(contacts)
-        location.reload();
-    }
+    let nameInput = event.target.querySelector("#usernameInput").value;
+    let response;
+    fetch('https://api.github.com/users/' + nameInput)
+        .then(res => res.json())//response type
+        .then(data => {
+            response = data;
+            loadInfo(response);
+        });
 }
 
-const loadTable = (contacts) => {
-    let table = document.querySelector("table");
-    //clear table
-    table.lastElementChild.textContent='';
-    if(!contacts) return;
+const loadInfo = async (data) => {
+    let profileTable = document.querySelector("#profileTable");
+    //get references
+    let avatar = profileTable.querySelector("#avatar")
+    let name = profileTable.querySelector("#name");
+    let username = profileTable.querySelector("#username");
+    let email = profileTable.querySelector("#email");
+    let location = profileTable.querySelector("#location");
+    let gists = profileTable.querySelector("#gists");
 
-    contacts.map(contact => {
-        let tableRow = document.createElement("tr");
-        let tableCellName = document.createElement("td");
-        tableCellName.appendChild(document.createTextNode(contact.nameInput));
+    avatar.setAttribute("src", validateData(data["avatar_url"]))
+    name.textContent = "Name: " + validateData(data["name"]);
+    username.textContent = "Username: " + validateData(data["login"]);
+    email.textContent = "Email: " + validateData(data["email"]);
+    location.textContent = "Location: " + validateData(data["location"]);
+    gists.textContent = "Number of Gists: " + validateData(data["public_gists"]);
 
-        let tableCellPhone = document.createElement("td");
-        tableCellPhone.appendChild(document.createTextNode(contact.phoneNoInput));
+    let repos;
+    await fetch(data["repos_url"])
+        .then(res => res.json())//response type
+        .then(data => {
+            repos = data;
+        });
+    let userRepos = document.querySelector("#userRepos")
+    if(repos.length > 5) {
+        userRepos.style.overflow = "scroll";
+        userRepos.style.maxHeight = "90vh";
+    } else {
+        userRepos.style.overflow = "visible";
+        userRepos.style.maxHeight = "none";
+    }
 
-        let tableCellEmail = document.createElement("td");
-        tableCellEmail.appendChild(document.createTextNode(contact.emailInput));
+    let reposTable = document.querySelector("#reposTable");
+    reposTable.firstElementChild.textContent = ''
+    reposTable.firstElementChild.innerHTML = repos.map(repo => {
+        return "<tr><td>" +
+            "<p>Name: " + validateData(repo["name"]) + "</p>" +
+            "<p>Description: " + validateData(repo["description"]) + "</p>" +
+            "</td></tr>"
+    }).join("");
+}
 
-        tableRow.appendChild(tableCellName);
-        tableRow.appendChild(tableCellPhone);
-        tableRow.appendChild(tableCellEmail);
-
-        table.lastElementChild.appendChild(tableRow);
-    })
+const validateData = (data) => {
+    if(data === null || data === undefined) {
+        return ""
+    } else {
+        return data;
+    }
 }
 
 const validateInputs = (inputs) => {
@@ -97,15 +103,13 @@ const validateInputs = (inputs) => {
         showInputError("email should be less than 40 characters in length");
         return false;
     }
-    document.getElementById("error").style.display = "none"
+
     return true
 }
 
 const showInputError = (text) => {
-    console.log("test")
-    let error = document.getElementById("error");
-    error.firstElementChild.textContent = "Error: " + text;
-    error.style.display = "block"
+    let error = document.getElementById("error").firstElementChild;
+    error.innerHTML = "Error: " + text;
 }
 
 let sorted = false;
@@ -133,15 +137,6 @@ const filterTableByPhoneNo = (event) => {
     loadTable(filtered);
 }
 
-const showNoResult = () => {
-    let noResult = document.getElementById("noResult").firstElementChild;
-    noResult.innerHTML = "No result";
-}
-
-const hideNoResult = () => {
-    let noResult = document.getElementById("noResult").firstElementChild;
-    noResult.innerHTML = "";
-}
 const tableToArray = () => {
     let contacts = [];
     document

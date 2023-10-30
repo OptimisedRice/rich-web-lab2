@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Github API</title>
+    <script src="git.js"></script>
+    <link rel="stylesheet" href="git.css">
+</head>
+<body>
+    <div id="main">
+        <div id="searchBox">
+            <form id="usernameForm">
+                <div style="flex-grow: 4">
+                    <input id="usernameInput" placeholder="Username">
+                </div>
+                <div style="flex-grow: 1">
+                    <input id="search" type="submit" value="Search">
+                </div>
+            </form>
+        </div>
+        <div id="userTitles">
+            <h2>User Profile</h2>
+            <h2>User Repos</h2>
+        </div>
+        <div id="userInfo">
+            <div id="userProfile">
+                <table id="profileTable">
+                    <tbody>
+                        <tr><td><img id="avatar" src="" alt="avatar picture"/></td></tr>
+                        <tr><td><p id="name">Name:</p></td></tr>
+                        <tr><td ><p id="username">Username:</p></td></tr>
+                        <tr><td ><p id="email">Email:</p></td></tr>
+                        <tr><td><p id="location">Location:</p></td></tr>
+                        <tr><td><p id="gists">Number of Gists:</p></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="userRepos">
+                <table id="reposTable">
+                    <tbody>
+                        <tr><td>
+                                <p>Name:</p>
+                                <p>Description:</p>
+                        </td></tr>
+                        <tr><td>
+                                <p>Name:</p>
+                                <p>Description:</p>
+                        </td></tr>
+                        <tr><td>
+                                <p>Name:</p>
+                                <p>Description:</p>
+                        </td></tr>
+                        <tr><td>
+                            <p>Name:</p>
+                            <p>Description:</p>
+                        </td></tr>
+                        <tr><td>
+                            <p>Name:</p>
+                            <p>Description:</p>
+                        </td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
